@@ -44,34 +44,30 @@ public class ProfileService {
                                     String email,
                                     String rawPassword,
                                     List<String> initialSkills) {
-        // Opción: podrías validar aquí que el ID o el email no estén ya en uso...
         ProfileBuilder builder = new ConcreteProfileBuilder();
-        // 1) Montar User+Profile
+
+        // 1) Montar User + Profile
         User candidate = director.createTechCandidate(
-                builder,
-                id,
-                username,
-                email,
-                initialSkills
-        );
-        // 2) Asignar contraseña
+                builder, id, username, email, initialSkills);
         builder.withUserPassword(rawPassword);
 
-        // 3) Persistir User (y obtenemos el ID real si fuera autogenerado)
-        User savedUser = userRepo.saveUser(candidate);
+        // 2) Primero, guardar el Profile
+        Profile profileToSave = candidate.getProfile();
+        profileToSave.setUserId(candidate.getId());
+        Profile savedProfile = profileRepo.saveProfile(profileToSave);
 
-        // 4) Persistir Profile básico (sin skills aún)
-        Profile toSave = savedUser.getProfile();
-        toSave.setUserId(savedUser.getId());
-        Profile savedProfile = profileRepo.saveProfile(toSave);
+        // 3) Asignar el nuevo profile_id al User antes de salvarlo
+        candidate.setProfile(savedProfile);
+
+        // 4) Guardar User (ahora profile_id existe en BD)
+        User savedUser = userRepo.saveUser(candidate);
 
         // 5) Asignar skills en la tabla intermedia
         assignSkillsToProfile(savedProfile.getId(), initialSkills);
 
-        // 6) Devolver el usuario con perfil completo
-        savedUser.setProfile(getProfileById(savedProfile.getId()).orElse(savedProfile));
         return savedUser;
     }
+
 
     private void assignSkillsToProfile(int profileId, List<String> skills) {
         skills.forEach(skillName -> {

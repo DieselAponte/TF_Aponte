@@ -1,0 +1,59 @@
+.applications-list {
+    -fx-background-color: transparent;
+}
+
+.applications-list .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15px;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1px 0;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 1, 0, 0, 1);
+    -fx-font-size: 14px;
+    -fx-text-fill: #495057;
+}
+
+.applications-list .list-cell:filled:hover {
+    -fx-background-color: #f8fbff;
+    -fx-cursor: hand;
+}
+
+.app-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #007acc;
+}
+
+.app-company, .app-location {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6c757d;
+}
+
+.app-date {
+    -fx-font-size: 12px;
+    -fx-text-fill: #adb5bd;
+}
+
+.app-status {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #28a745; /* verde por defecto */
+}
+
+.app-status.rechazado {
+    -fx-text-fill: #dc3545; /* rojo */
+}
+
+.app-status.en-proceso {
+    -fx-text-fill: #ffc107; /* amarillo */
+}
+
+.ver-detalles-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #007acc;
+    -fx-text-fill: #007acc;
+    -fx-font-size: 12px;
+    -fx-background-radius: 4px;
+    -fx-padding: 3px 8px;
+    -fx-cursor: hand;
+}

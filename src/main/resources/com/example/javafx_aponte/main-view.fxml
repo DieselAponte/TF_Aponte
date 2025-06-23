@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane stylesheets="@css/jobs.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafx_aponte.controllers.MainPageController">
+
+    <!-- Barra superior simplificada -->
+    <top>
+        <HBox styleClass="top-bar" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+            <padding>
+                <Insets bottom="10" left="15" right="15" top="10" />
+            </padding>
+
+            <!-- Icono de perfil -->
+            <Button onAction="#mostrarPerfil" styleClass="icon-button">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32">
+                        <Image url="@imagenes/icono_perfil.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Barra de búsqueda -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="search-container">
+                <ImageView fitHeight="16" fitWidth="16" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@imagenes/icono_buscar.png" />
+                </ImageView>
+                <TextField promptText="Buscar trabajos..." styleClass="search-field" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Iconos de notificaciones y postulaciones -->
+            <Button onAction="#mostrarNotificaciones" styleClass="icon-button">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32">
+                        <Image url="@imagenes/icono_notificaciones.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button onAction="#mostrarPostulaciones" styleClass="icon-button">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32">
+                        <Image url="@imagenes/icono_postulaciones.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+
+
+    <!-- Contenido principal -->
+    <center>
+        <HBox spacing="20" styleClass="main-content">
+            <padding>
+                <Insets bottom="20" left="30" right="30" top="20" />
+            </padding>
+
+            <!-- Panel de filtros (izquierda) -->
+            <VBox maxWidth="250" minWidth="163.0" prefHeight="565.0" prefWidth="163.0" spacing="15" styleClass="filters-panel">
+                <Label styleClass="filter-section-title" text="Tipo" />
+                <VBox spacing="5" styleClass="filter-group">
+                    <CheckBox text="Construcción" />
+                    <CheckBox text="Ventas" />
+                    <CheckBox text="Transporte" />
+                    <CheckBox text="Modernas" />
+                </VBox>
+
+                <Label styleClass="filter-section-title" text="Experiencia" />
+                <VBox spacing="5" styleClass="filter-group">
+                    <CheckBox text="1 año" />
+                    <CheckBox text="2 - 5 años" />
+                    <CheckBox text="6 años a más" />
+                </VBox>
+
+                <Label styleClass="filter-section-title" text="Sueldo" />
+                <VBox spacing="5" styleClass="filter-group">
+                    <CheckBox text="950 soles" />
+                    <CheckBox text="1025 soles" />
+                    <CheckBox text="1200 soles" />
+                </VBox>
+            </VBox>
+
+            <!-- Lista de trabajos (centro) -->
+            <VBox maxWidth="400" minWidth="300" prefHeight="565.0" prefWidth="393.0" spacing="15" styleClass="jobs-list-panel">
+                <Label styleClass="section-title" text="Puestos de Trabajo" />
+                <ListView prefHeight="487.0" prefWidth="300.0" styleClass="jobs-list-view">
+                    <!-- Los items se cargarán dinámicamente -->
+                </ListView>
+            </VBox>
+
+            <!-- Detalles del trabajo (derecha) -->
+            <VBox spacing="15" styleClass="job-detail-panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="job-title" text="Título del trabajo" />
+                <Label styleClass="job-company" text="Empresa" />
+                <Label styleClass="job-location" text="Ubicación" />
+
+                <Label styleClass="job-section-label" text="Descripción" />
+                <TextArea editable="false" prefHeight="150" prefRowCount="5" styleClass="job-description" text="Descripción del puesto" wrapText="true" />
+                <Button onAction="#postularme" styleClass="primary-button" text="Postularme" />
+
+                <VBox spacing="5" styleClass="job-info">
+                    <Label text="• Contrato por Inicio o Incremento de Actividad" />
+                    <Label text="• Tiempo completo" />
+                    <Label text="• Presencial" />
+                </VBox>
+
+                <Label styleClass="job-highlight" text="¡Buscamos personas con ganas de crecer!" />
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,81 @@
+/* Estilos generales */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Contenedor principal del login */
+.login-container {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 30;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+/* Etiquetas */
+.login-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+/* Campos de texto */
+.login-field {
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1;
+    -fx-padding: 8;
+}
+
+.login-field:focused {
+    -fx-border-color: #3498db;
+}
+
+/* Checkbox */
+.login-checkbox {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 13px;
+}
+
+.login-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 3;
+}
+
+.login-checkbox:selected .mark {
+    -fx-background-color: #3498db;
+}
+
+/* Botón de ingresar */
+.login-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+
+.login-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Botón de crear cuenta */
+.crear-cuenta-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #3498db;
+    -fx-font-size: 14px;
+    -fx-border-color: #3498db;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+
+.crear-cuenta-button:hover {
+    -fx-background-color: rgba(52, 152, 219, 0.1);
+}

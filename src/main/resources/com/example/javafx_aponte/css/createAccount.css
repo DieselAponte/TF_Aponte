@@ -1,0 +1,99 @@
+/* Fondo general blanco */
+.root, .stack-pane {
+    -fx-background-color: #FFFFFF;
+}
+
+/* Contenedor principal */
+.register-container {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 40px;
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+    -fx-max-width: 500px;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 0);
+}
+
+/* Título */
+.register-title {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+/* Grid del formulario */
+.form-grid {
+    -fx-padding: 0 0 15px 0;
+}
+
+/* Etiquetas del formulario */
+.form-label {
+    -fx-text-fill: #495057;
+    -fx-font-size: 14px;
+    -fx-alignment: center-right;
+}
+
+/* Campos de formulario */
+.form-field {
+    -fx-pref-height: 35px;
+    -fx-pref-width: 250px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 14px;
+    -fx-background-color: #FFFFFF;
+}
+
+.form-field:focused {
+    -fx-border-color: #007acc;
+    -fx-effect: dropshadow(gaussian, rgba(0,122,204,0.1), 5, 0.2, 0, 0);
+}
+
+/* Contenedor de botones */
+.button-container {
+    -fx-padding: 15px 0 0 0;
+}
+
+/* Botón principal (azul #007acc) */
+.register-button {
+    -fx-background-color: #007acc;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 120px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.register-button:hover {
+    -fx-background-color: #006bb3;
+}
+
+/* Botón secundario */
+.register-back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6c757d;
+    -fx-border-color: #6c757d;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 120px;
+    -fx-cursor: hand;
+}
+
+.register-back-button:hover {
+    -fx-text-fill: #5a6268;
+    -fx-border-color: #5a6268;
+    -fx-background-color: #f8f9fa;
+}
+
+/* Texto de ayuda */
+.register-hint {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}

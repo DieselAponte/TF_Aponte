@@ -1,0 +1,128 @@
+/* Paleta de colores principal */
+.root {
+    -fx-primary-color: #3498db;     /* Azul principal */
+    -fx-secondary-color: #2c3e50;   /* Azul oscuro */
+    -fx-accent-color: #e74c3c;      /* Rojo */
+    -fx-light-color: #ecf0f1;       /* Gris claro */
+    -fx-dark-color: #34495e;        /* Azul más oscuro */
+    -fx-success-color: #2ecc71;     /* Verde */
+}
+
+/* Estilo base del VBox principal */
+.vbox {
+    -fx-background-color: white;
+    -fx-border-color: -fx-light-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+/* Título */
+.label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-secondary-color;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Botón principal */
+#btnSeleccionarArchivo {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 8 15 8 15;
+    -fx-cursor: hand;
+}
+
+#btnSeleccionarArchivo:hover {
+    -fx-background-color: derive(-fx-primary-color, -10%);
+}
+
+#btnSeleccionarArchivo:pressed {
+    -fx-background-color: derive(-fx-primary-color, -20%);
+}
+
+/* Etiqueta de nombre de archivo */
+#lblNombreArchivo {
+    -fx-text-fill: -fx-dark-color;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 0 0;
+}
+
+/* ListView de archivos */
+#listaArchivos {
+    -fx-background-color: white;
+    -fx-border-color: #d0d0d0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-border-width: 1;
+}
+
+#listaArchivos .list-cell {
+    -fx-padding: 8 10 8 10;
+    -fx-border-color: transparent transparent #f0f0f0 transparent;
+    -fx-border-width: 1;
+}
+
+#listaArchivos .list-cell:filled:hover {
+    -fx-background-color: #f5f9ff;
+}
+
+#listaArchivos .list-cell:filled:selected {
+    -fx-background-color: #e3f2ff;
+}
+
+/* Botones de acción */
+#btnAceptar {
+    -fx-background-color: -fx-success-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand;
+}
+
+#btnAceptar:hover {
+    -fx-background-color: derive(-fx-success-color, -10%);
+}
+
+#btnCancelar {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-accent-color;
+    -fx-font-weight: bold;
+    -fx-border-color: -fx-accent-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand;
+}
+
+#btnCancelar:hover {
+    -fx-background-color: rgba(231, 76, 60, 0.1);
+}
+
+/* ScrollBar personalizada */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: derive(-fx-dark-color, 50%);
+    -fx-background-radius: 2;
+}
+
+/* Efectos de hover para toda la ventana */
+*:hover {
+    -fx-cursor: default;
+}
+
+.button:hover, .list-cell:hover {
+    -fx-cursor: hand;
+}

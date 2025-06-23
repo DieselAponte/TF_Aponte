@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.javafx_aponte.controllers.CreateAccountController"
+            stylesheets="@css/createAccount.css">
+
+    <!-- Fondo blanco completo -->
+    <StackPane style="-fx-background-color: #FFFFFF;"
+               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <!-- Contenedor principal con sombra y borde -->
+        <VBox alignment="CENTER" styleClass="register-container">
+
+            <!-- Encabezado -->
+            <Label styleClass="register-title" text="Crear Nueva Cuenta">
+                <font>
+                    <Font name="System Bold" size="20.0" />
+                </font>
+                <VBox.margin>
+                    <Insets bottom="20"/>
+                </VBox.margin>
+            </Label>
+
+            <!-- Formulario -->
+            <GridPane alignment="CENTER" hgap="10" styleClass="form-grid" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+                </columnConstraints>
+
+                <Label styleClass="form-label" text="Usuario:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="txtNuevoUsuario" promptText="Ej: usuario123" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label styleClass="form-label" text="Contraseña:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <PasswordField fx:id="txtNuevaContraseña" promptText="Mínimo 8 caracteres" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label styleClass="form-label" text="Confirmar:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <PasswordField fx:id="txtConfirmarContraseña" promptText="Repite tu contraseña" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
+            </GridPane>
+
+            <!-- Botones -->
+            <HBox alignment="CENTER" spacing="20" styleClass="button-container">
+                <Button prefWidth="120" styleClass="register-button" text="Registrarse" />
+                <Button onAction="#volverALogin" prefWidth="120" styleClass="register-back-button" text="Volver" />
+                <HBox.margin>
+                    <Insets top="20"/>
+                </HBox.margin>
+            </HBox>
+
+            <!-- Mensaje adicional -->
+            <Label styleClass="register-hint" text="Todos los campos son obligatorios">
+                <VBox.margin>
+                    <Insets top="20"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </StackPane>
+</AnchorPane>

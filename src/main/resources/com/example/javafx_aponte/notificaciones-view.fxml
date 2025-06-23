@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane stylesheets="@css/jobs.css, @css/notificaciones.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafx_aponte.controllers.NotificationsController">
+
+    <!-- Barra superior simplificada -->
+    <top>
+        <HBox xmlns="http://javafx.com/javafx/17.0.12"
+              xmlns:fx="http://javafx.com/fxml/1"
+              styleClass="top-bar">
+            <padding>
+                <Insets bottom="10" left="15" right="15" top="10"/>
+            </padding>
+
+            <Button onAction="#mostrarMainMenu" styleClass="icon-only-back-button">
+                <graphic>
+                    <ImageView fitHeight="24" fitWidth="24">
+                        <Image url="@imagenes/regresar-icon.png" /> <!-- Usa tu propia flecha -->
+                    </ImageView>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="Volver al menú principal" />
+                </tooltip>
+            </Button>
+            <!-- Icono de perfil -->
+            <Button onAction="#mostrarPerfil" styleClass="icon-button">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32">
+                        <Image url="@imagenes/icono_perfil.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Barra de búsqueda -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="search-container">
+                <ImageView fitHeight="16" fitWidth="16" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@imagenes/icono_buscar.png"/>
+                </ImageView>
+                <TextField promptText="Buscar trabajos..." styleClass="search-field"/>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Iconos de notificaciones y postulaciones -->
+            <Button onAction="#mostrarNotificaciones" styleClass="icon-button">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32">
+                        <Image url="@imagenes/icono_notificaciones.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button onAction="#mostrarPostulaciones" styleClass="icon-button">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32">
+                        <Image url="@imagenes/icono_postulaciones.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+
+    <!-- Contenido principal: lista de notificaciones -->
+    <center>
+        <VBox spacing="20" styleClass="main-content">
+            <padding>
+                <Insets top="20" bottom="20" left="30" right="30" />
+            </padding>
+
+            <Label styleClass="section-title" text="Notificaciones Recientes" />
+
+            <ListView fx:id="listaNotificaciones" prefHeight="500" styleClass="notifications-list">
+                <!-- Las notificaciones se cargarán desde el controlador -->
+            </ListView>
+        </VBox>
+    </center>
+
+</BorderPane>

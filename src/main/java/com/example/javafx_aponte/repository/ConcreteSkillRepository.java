@@ -83,16 +83,29 @@ public class ConcreteSkillRepository implements SkillRepository {
 
     @Override
     public void assignSkillToProfile(int profileId, int skillId) {
-        String sql = "INSERT INTO profile_skills (profile_id, skill_id) VALUES (?, ?)";
+        String checkSql = "SELECT 1 FROM profile_skills WHERE profile_id = ? AND skill_id = ?";
+        String insertSql = "INSERT INTO profile_skills (profile_id, skill_id) VALUES (?, ?)";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, profileId);
-            stmt.setInt(2, skillId);
-            stmt.executeUpdate();
+        try (
+                PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+                PreparedStatement insertStmt = connection.prepareStatement(insertSql)
+        ) {
+            checkStmt.setInt(1, profileId);
+            checkStmt.setInt(2, skillId);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (!rs.next()) {
+                insertStmt.setInt(1, profileId);
+                insertStmt.setInt(2, skillId);
+                insertStmt.executeUpdate();
+            } else {
+                System.out.println("🔄 Habilidad ya asignada: profileId=" + profileId + ", skillId=" + skillId);
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Error al asignar habilidad al perfil", e);
         }
     }
+
 
     @Override
     public void deleteSkillsForProfile(int profileId) {

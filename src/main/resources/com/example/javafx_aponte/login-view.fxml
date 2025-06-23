@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane stylesheets="@css/login.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafx_aponte.controllers.LoginController">
+   <StackPane style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane style="-fx-background-color: transparent;">
+         <center>
+            <VBox alignment="CENTER" spacing="15" styleClass="login-container">
+               <ImageView fitHeight="124" fitWidth="219" pickOnBounds="true" preserveRatio="true">
+                  <VBox.margin>
+                     <Insets bottom="20"/>
+                  </VBox.margin>
+                  <image>
+                     <Image url="@imagenes/Icono_logeo-removebg-preview.png"/>
+                  </image>
+               </ImageView>
+
+               <Label styleClass="login-label" text="Usuario"/>
+               <TextField fx:id="campoUsuario" styleClass="login-field" maxWidth="250.0" prefWidth="250.0"/>
+
+               <Label styleClass="login-label" text="Contraseña"/>
+               <PasswordField fx:id="campoContrasena" styleClass="login-field" maxWidth="250.0" prefWidth="250.0"/>
+
+               <CheckBox fx:id="checkRecordar" styleClass="login-checkbox" text="Recordar contraseña"/>
+
+               <Button fx:id="botonIngresar" styleClass="login-button" onAction="#mostrarMainMenu" text="Ingresar" maxWidth="150.0"/>
+               <Button fx:id="botonCrearCuenta" styleClass="crear-cuenta-button" onAction="#mostrarCreateAccount" text="Crear cuenta" maxWidth="150.0"/>
+            </VBox>
+         </center>
+      </BorderPane>
+   </StackPane>
+</AnchorPane>
