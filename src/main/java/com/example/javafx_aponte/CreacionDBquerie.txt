@@ -1,0 +1,113 @@
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS repositorytf;
+USE repositorytf;
+
+-- Tabla companies
+CREATE TABLE IF NOT EXISTS companies (
+    company_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    job_sector VARCHAR(50) NOT NULL,
+    address TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (company_id)
+);
+
+-- Tabla skills
+CREATE TABLE IF NOT EXISTS skills (
+    skill_id INT NOT NULL AUTO_INCREMENT,
+    skill_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (skill_id),
+    UNIQUE KEY (skill_name)
+);
+
+-- Tabla users
+CREATE TABLE IF NOT EXISTS users (
+    id INT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    profile_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY (username),
+    UNIQUE KEY (email)
+);
+
+-- Tabla profiles
+CREATE TABLE IF NOT EXISTS profiles (
+    profile_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    profession VARCHAR(100),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (profile_id),
+    UNIQUE KEY (user_id)
+);
+
+-- Tabla profile_skills (tabla de unión entre profiles y skills)
+CREATE TABLE IF NOT EXISTS profile_skills (
+    profile_id INT NOT NULL,
+    skill_id INT NOT NULL,
+    PRIMARY KEY (profile_id, skill_id),
+    FOREIGN KEY (profile_id) REFERENCES profiles(profile_id),
+    FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
+);
+
+-- Tabla job_vacancies
+CREATE TABLE IF NOT EXISTS job_vacancies (
+    vacancy_id INT NOT NULL AUTO_INCREMENT,
+    company_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    publication_date DATE NOT NULL,
+    salary DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (vacancy_id),
+    FOREIGN KEY (company_id) REFERENCES companies(company_id)
+);
+
+-- Tabla job_requirements
+CREATE TABLE IF NOT EXISTS job_requirements (
+    requirement_id INT NOT NULL AUTO_INCREMENT,
+    vacancy_id INT NOT NULL,
+    requirement VARCHAR(100) NOT NULL,
+    PRIMARY KEY (requirement_id),
+    FOREIGN KEY (vacancy_id) REFERENCES job_vacancies(vacancy_id)
+);
+
+-- Tabla postulations
+CREATE TABLE IF NOT EXISTS postulations (
+    postulation_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    vacancy_id INT NOT NULL,
+    status ENUM('POSTULADO','EN_GESTION','ENTREVISTA','ACEPTADO','RECHAZADO') NOT NULL DEFAULT 'POSTULADO',
+    postulation_date DATE DEFAULT (CURRENT_DATE),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (postulation_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (vacancy_id) REFERENCES job_vacancies(vacancy_id),
+    INDEX (status)
+);
+
+-- Tabla notifications
+CREATE TABLE IF NOT EXISTS notifications (
+    notification_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    is_read TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    read_at TIMESTAMP NULL,
+    PRIMARY KEY (notification_id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Añadir la clave foránea de profile_id en users después de crear la tabla profiles
+ALTER TABLE users
+ADD FOREIGN KEY (profile_id) REFERENCES profiles(profile_id);

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobVacancies {
+public class JobVacancy {
     private int id;
     private String title;
     private String description;
@@ -13,7 +13,7 @@ public class JobVacancies {
     private List<String> jobRequirements;
     private double salary;
 
-    public JobVacancies(int id, String title, String description, Company company, LocalDate publicationDate, List<String> jobRequirements, double salary) {
+    public JobVacancy(int id, String title, String description, Company company, LocalDate publicationDate, List<String> jobRequirements, double salary) {
         this.id = id;
         this.title = title;
         this.description = description;

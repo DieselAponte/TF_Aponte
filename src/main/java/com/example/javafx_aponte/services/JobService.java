@@ -1,6 +1,6 @@
 package com.example.javafx_aponte.services;
 
-import com.example.javafx_aponte.models.JobVacancies;
+import com.example.javafx_aponte.models.JobVacancy;
 import com.example.javafx_aponte.models.User;
 import com.example.javafx_aponte.repository.CompanyRepository;
 import com.example.javafx_aponte.repository.JobVacancyRepository;
@@ -17,25 +17,25 @@ public class JobService {
         this.companyRepo = companyRepo;
     }
 
-    public JobVacancies createJobVacancy(JobVacancies vacancy) {
+    public JobVacancy createJobVacancy(JobVacancy vacancy) {
         companyRepo.findCompanyById(vacancy.getCompany().getIdCompany())
                 .orElseThrow(() -> new IllegalArgumentException("Empresa no existe"));
         return jobRepo.saveJobVacancy(vacancy);
     }
 
-    public Optional<JobVacancies> getJobById(int id) {
+    public Optional<JobVacancy> getJobById(int id) {
         return jobRepo.findJobVacancyById(id);
     }
 
-    public List<JobVacancies> getAllJobs() {
+    public List<JobVacancy> getAllJobs() {
         return jobRepo.findAllJobVacancies();
     }
 
-    public List<JobVacancies> getJobsByCompany(int companyId) {
+    public List<JobVacancy> getJobsByCompany(int companyId) {
         return jobRepo.findJobVacanciesByCompanyId(companyId);
     }
 
-    public List<JobVacancies> searchJobs(String keyword, String sector, double minSalary, double maxSalary) {
+    public List<JobVacancy> searchJobs(String keyword, String sector, double minSalary, double maxSalary) {
         if (keyword != null && !keyword.isEmpty()) {
             return jobRepo.findJobVacanciesByKeyword(keyword);
         } else if (sector != null && !sector.isEmpty()) {
@@ -45,7 +45,7 @@ public class JobService {
         }
     }
 
-    public List<JobVacancies> getRecommendedJobs(User user) {
+    public List<JobVacancy> getRecommendedJobs(User user) {
         if (user.getProfile() == null || user.getProfile().getJobSkills().isEmpty()) {
             return jobRepo.findAllJobVacancies();
         }
@@ -56,7 +56,7 @@ public class JobService {
         jobRepo.deleteJobVacancy(id);
     }
 
-    public JobVacancies updateJob(JobVacancies vacancy) {
+    public JobVacancy updateJob(JobVacancy vacancy) {
         return jobRepo.updateJobVacancy(vacancy);
     }
 }

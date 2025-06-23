@@ -1,7 +1,7 @@
 package com.example.javafx_aponte.repository;
 
 import com.example.javafx_aponte.models.Company;
-import com.example.javafx_aponte.models.JobVacancies;
+import com.example.javafx_aponte.models.JobVacancy;
 
 import java.sql.*;
 import java.sql.Date;
@@ -15,7 +15,7 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
     }
 
     @Override
-    public JobVacancies saveJobVacancy(JobVacancies vacancy) {
+    public JobVacancy saveJobVacancy(JobVacancy vacancy) {
         String sql = vacancy.getId() == 0 ?
                 "INSERT INTO job_vacancies (title, description, company_id, publication_date, salary) VALUES (?, ?, ?, ?, ?)" :
                 "UPDATE job_vacancies SET title = ?, description = ?, company_id = ?, publication_date = ?, salary = ? WHERE vacancy_id = ?";
@@ -47,7 +47,7 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
     }
 
     @Override
-    public Optional<JobVacancies> findJobVacancyById(Integer id) {
+    public Optional<JobVacancy> findJobVacancyById(Integer id) {
         String sql = "SELECT j.*, c.name, c.address, c.description, c.job_sector FROM job_vacancies j " +
                 "JOIN companies c ON j.company_id = c.company_id WHERE j.vacancy_id = ?";
 
@@ -65,14 +65,14 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
     }
 
     @Override
-    public List<JobVacancies> findAllJobVacancies() {
+    public List<JobVacancy> findAllJobVacancies() {
         String sql = "SELECT j.*, c.name, c.address, c.description, c.job_sector FROM job_vacancies j " +
                 "JOIN companies c ON j.company_id = c.company_id";
         return fetchJobVacancies(sql);
     }
 
     @Override
-    public List<JobVacancies> findJobVacanciesByCompanyId(int companyId) {
+    public List<JobVacancy> findJobVacanciesByCompanyId(int companyId) {
         String sql = "SELECT j.*, c.name, c.address, c.description, c.job_sector FROM job_vacancies j " +
                 "JOIN companies c ON j.company_id = c.company_id WHERE j.company_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -84,7 +84,7 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
     }
 
     @Override
-    public List<JobVacancies> findJobVacanciesByCompanyName(String companyName) {
+    public List<JobVacancy> findJobVacanciesByCompanyName(String companyName) {
         String sql = "SELECT j.*, c.name, c.address, c.description, c.job_sector FROM job_vacancies j " +
                 "JOIN companies c ON j.company_id = c.company_id WHERE c.name LIKE ?";
 
@@ -97,7 +97,7 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
     }
 
     @Override
-    public List<JobVacancies> findJobVacanciesByKeyword(String keyword) {
+    public List<JobVacancy> findJobVacanciesByKeyword(String keyword) {
         String sql = "SELECT j.*, c.name, c.address, c.description, c.job_sector FROM job_vacancies j " +
                 "JOIN companies c ON j.company_id = c.company_id " +
                 "WHERE j.title LIKE ? OR j.description LIKE ?";
@@ -113,7 +113,7 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
     }
 
     @Override
-    public List<JobVacancies> findJobVacanciesBySalaryRange(double min, double max) {
+    public List<JobVacancy> findJobVacanciesBySalaryRange(double min, double max) {
         String sql = "SELECT j.*, c.name, c.address, c.description, c.job_sector FROM job_vacancies j " +
                 "JOIN companies c ON j.company_id = c.company_id " +
                 "WHERE j.salary BETWEEN ? AND ?";
@@ -140,12 +140,12 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
     }
 
     @Override
-    public JobVacancies updateJobVacancy(JobVacancies vacancy) {
+    public JobVacancy updateJobVacancy(JobVacancy vacancy) {
         return saveJobVacancy(vacancy);
     }
 
     @Override
-    public List<JobVacancies> findJobVacanciesBySkills(List<String> skills) {
+    public List<JobVacancy> findJobVacanciesBySkills(List<String> skills) {
         String sql = "SELECT j.*, c.name, c.address, c.description, c.job_sector FROM job_vacancies j " +
                 "JOIN companies c ON j.company_id = c.company_id " +
                 "JOIN job_requirements r ON j.vacancy_id = r.vacancy_id " +
@@ -164,7 +164,7 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
         }
     }
 
-    private List<JobVacancies> fetchJobVacancies(String sql) {
+    private List<JobVacancy> fetchJobVacancies(String sql) {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             return fetchJobVacancies(rs);
@@ -173,21 +173,21 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
         }
     }
 
-    private List<JobVacancies> fetchJobVacancies(PreparedStatement stmt) throws SQLException {
+    private List<JobVacancy> fetchJobVacancies(PreparedStatement stmt) throws SQLException {
         try (ResultSet rs = stmt.executeQuery()) {
             return fetchJobVacancies(rs);
         }
     }
 
-    private List<JobVacancies> fetchJobVacancies(ResultSet rs) throws SQLException {
-        List<JobVacancies> vacancies = new ArrayList<>();
+    private List<JobVacancy> fetchJobVacancies(ResultSet rs) throws SQLException {
+        List<JobVacancy> vacancies = new ArrayList<>();
         while (rs.next()) {
             vacancies.add(mapToJobVacancy(rs));
         }
         return vacancies;
     }
 
-    private JobVacancies mapToJobVacancy(ResultSet rs) throws SQLException {
+    private JobVacancy mapToJobVacancy(ResultSet rs) throws SQLException {
         Company company = new Company(
                 rs.getInt("company_id"),
                 rs.getString("name"),      // Cambiado de name_company
@@ -196,7 +196,7 @@ public class ConcreteJobsVacancyRepository implements JobVacancyRepository {
                 rs.getString("address")    // Cambiado de company_address
         );
 
-        return new JobVacancies(
+        return new JobVacancy(
                 rs.getInt("vacancy_id"),   // Cambiado de id
                 rs.getString("title"),
                 rs.getString("description"),

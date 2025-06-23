@@ -1,6 +1,6 @@
 package com.example.javafx_aponte.services;
 
-import com.example.javafx_aponte.models.JobVacancies;
+import com.example.javafx_aponte.models.JobVacancy;
 import com.example.javafx_aponte.models.Postulation;
 import com.example.javafx_aponte.models.User;
 import com.example.javafx_aponte.repository.JobVacancyRepository;
@@ -27,7 +27,7 @@ public class PostulationService {
         User existingUser = userRepo.findUserById(user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no existe"));
 
-        JobVacancies job = jobRepo.findJobVacancyById(jobId)
+        JobVacancy job = jobRepo.findJobVacancyById(jobId)
                 .orElseThrow(() -> new IllegalArgumentException("Vacante no existe"));
 
         // Verificar si ya existe una postulación

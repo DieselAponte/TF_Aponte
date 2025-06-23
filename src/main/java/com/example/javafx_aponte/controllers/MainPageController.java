@@ -11,17 +11,15 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import com.example.javafx_aponte.models.JobVacancies;
+import com.example.javafx_aponte.models.JobVacancy;
 import com.example.javafx_aponte.models.Session;
 import com.example.javafx_aponte.services.JobService;
 import com.example.javafx_aponte.services.NotificationService;
 import com.example.javafx_aponte.services.PostulationService;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
-import com.example.javafx_aponte.repository.*;
 public class MainPageController {
 
     @FXML private ToggleGroup tipoGroup;
@@ -31,11 +29,11 @@ public class MainPageController {
     @FXML private Button btnNotifications, btnMessages, btnProfile;
     @FXML private Label notificationBadge;
     @FXML private VBox jobListContainer, jobDetailPanel;
-    @FXML private ListView<JobVacancies> jobListView;
+    @FXML private ListView<JobVacancy> jobListView;
     @FXML private Label jobTitleLabel, jobCompanyLabel, jobLocationLabel, jobDetailsLabel;
     @FXML private Button btnPostularme;
 
-    private JobVacancies selectedJob;
+    private JobVacancy selectedJob;
     private final IntegerProperty notificationCount = new SimpleIntegerProperty(0);
     //Servicios:
     private final JobService jobService;
@@ -84,9 +82,9 @@ public class MainPageController {
     }
 
     private void setupJobList() {
-        jobListView.setCellFactory(lv -> new ListCell<JobVacancies>() {
+        jobListView.setCellFactory(lv -> new ListCell<JobVacancy>() {
             @Override
-            protected void updateItem(JobVacancies item, boolean empty) {
+            protected void updateItem(JobVacancy item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty ? null : String.format("%s\n%s", item.getTitle(), item.getCompany().getNameCompany()));
             }
@@ -128,7 +126,7 @@ public class MainPageController {
         searchBar.setOnAction(e -> aplicarFiltros());
     }
 
-    private void cargarTrabajos(List<JobVacancies> trabajos) {
+    private void cargarTrabajos(List<JobVacancy> trabajos) {
         jobListView.getItems().setAll(trabajos);
     }
 
@@ -173,7 +171,7 @@ public class MainPageController {
         double sueldo = sueldoTexto != null ? Double.parseDouble(sueldoTexto.replaceAll("[^\\d]", "")) : 0;
         double sueldoMax = sueldo + 1000;
 
-        List<JobVacancies> filtrados = jobService.searchJobs(
+        List<JobVacancy> filtrados = jobService.searchJobs(
                 busqueda.isEmpty() ? null : busqueda,
                 tipo,
                 sueldo,

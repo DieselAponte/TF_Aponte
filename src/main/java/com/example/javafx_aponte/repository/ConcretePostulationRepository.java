@@ -1,9 +1,8 @@
 package com.example.javafx_aponte.repository;
 
-import com.example.javafx_aponte.models.JobVacancies;
+import com.example.javafx_aponte.models.JobVacancy;
 import com.example.javafx_aponte.models.Postulation;
 import com.example.javafx_aponte.models.User;
-import com.example.javafx_aponte.repository.PostulationRepository;
 import com.example.javafx_aponte.util.PostulationStatus;
 
 import java.sql.*;
@@ -144,7 +143,7 @@ public class ConcretePostulationRepository implements PostulationRepository {
     private Postulation mapToPostulation(ResultSet rs) throws SQLException {
         User user = new User(rs.getInt("user_id"), rs.getString("user_name"), null, null, null);
 
-        JobVacancies job = new JobVacancies(
+        JobVacancy job = new JobVacancy(
                 rs.getInt("vacancy_id"),
                 rs.getString("job_title"),
                 null,

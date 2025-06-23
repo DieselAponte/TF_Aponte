@@ -170,7 +170,7 @@ public class Main {
         jobRequirements.add("Conocimiento de Microservicios");
         jobRequirements.add("Experienca con Scrum");
         // 4. Insertar vacantes
-        JobVacancies javaJob = new JobVacancies(
+        JobVacancy javaJob = new JobVacancy(
                 0, "Desarrollador Java Senior",
                 "Desarrollo de aplicaciones empresariales con Spring Boot",
                 techCompany,
@@ -182,7 +182,7 @@ public class Main {
 
         // 4. Insertar vacantes (usando el constructor correcto)
 
-        JobVacancies hrJob = new JobVacancies(
+        JobVacancy hrJob = new JobVacancy(
                 0,
                 "Especialista en Reclutamiento IT",
                 "Gestión de talento tecnológico para empresas Fortune 500",

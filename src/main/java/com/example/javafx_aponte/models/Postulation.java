@@ -7,15 +7,15 @@ import com.example.javafx_aponte.util.PostulationStatus;
 public class Postulation {
     private int idPostulation;
     private User user;
-    private JobVacancies jobVacancy;
+    private JobVacancy jobVacancy;
     private PostulationStatus status;
     private LocalDate postulationDate;
 
-    public Postulation(int idPostulation, User user, JobVacancies jobVacancies,
+    public Postulation(int idPostulation, User user, JobVacancy jobVacancy,
                        PostulationStatus status, LocalDate postulationDate) {
         this.idPostulation = idPostulation;
         this.user = user;
-        this.jobVacancy = jobVacancies;
+        this.jobVacancy = jobVacancy;
         this.status = status;
         this.postulationDate = postulationDate;
     }
@@ -48,12 +48,12 @@ public class Postulation {
         this.user = user;
     }
 
-    public JobVacancies getJobVacancies() {
+    public JobVacancy getJobVacancies() {
         return jobVacancy;
     }
 
-    public void setJobVacancies(JobVacancies jobVacancies) {
-        this.jobVacancy = jobVacancies;
+    public void setJobVacancies(JobVacancy jobVacancy) {
+        this.jobVacancy = jobVacancy;
     }
 
     public PostulationStatus getStatus() {

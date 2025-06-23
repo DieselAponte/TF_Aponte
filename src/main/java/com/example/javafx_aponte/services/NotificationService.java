@@ -1,11 +1,10 @@
 package com.example.javafx_aponte.services;
 
-import com.example.javafx_aponte.models.JobVacancies;
+import com.example.javafx_aponte.models.JobVacancy;
 import com.example.javafx_aponte.models.Notification;
 import com.example.javafx_aponte.models.User;
 import com.example.javafx_aponte.repository.NotificationRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class NotificationService {
         return notificationRepo.saveNotification(notification);
     }
 
-    public Notification sendJobNotification(User user, JobVacancies job, String message) {
+    public Notification sendJobNotification(User user, JobVacancy job, String message) {
         Notification notification = new Notification(
                 0,
                 user.getId(),
