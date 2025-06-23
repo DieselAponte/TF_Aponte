@@ -1,17 +1,17 @@
 package com.example.javafx_aponte.services;
 
+import com.example.javafx_aponte.builder.builders.ProfileBuilder;
+import com.example.javafx_aponte.builder.products.ConcreteProfileBuilder;
+import com.example.javafx_aponte.builder.directors.UserProfileDirector;
 import com.example.javafx_aponte.models.Profile;
+import com.example.javafx_aponte.models.User;
 import com.example.javafx_aponte.repository.ProfileRepository;
 import com.example.javafx_aponte.repository.SkillRepository;
 import com.example.javafx_aponte.repository.UserRepository;
+import com.example.javafx_aponte.util.PostulationStatus;
 
-import java.util.*;
-import com.example.javafx_aponte.models.Profile;
-import com.example.javafx_aponte.repository.ProfileRepository;
-import com.example.javafx_aponte.repository.SkillRepository;
-import com.example.javafx_aponte.repository.UserRepository;
-
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,148 +19,143 @@ public class ProfileService {
     private final ProfileRepository profileRepo;
     private final UserRepository userRepo;
     private final SkillRepository skillRepo;
+    private final UserProfileDirector director;
 
     public ProfileService(ProfileRepository profileRepo,
                           UserRepository userRepo,
                           SkillRepository skillRepo) {
-        this.profileRepo = profileRepo;
-        this.userRepo = userRepo;
-        this.skillRepo = skillRepo;
+        this.profileRepo   = profileRepo;
+        this.userRepo      = userRepo;
+        this.skillRepo     = skillRepo;
+        this.director      = new UserProfileDirector();
     }
 
-    public Profile createProfile(Profile profile) {
-        // Verificar si el usuario ya tiene un perfil
-        if (profileRepo.findByUserId(profile.getUserId()).isPresent()) {
-            throw new IllegalArgumentException("El usuario ya tiene un perfil asignado");
-        }
+    /**
+     * Crea un nuevo usuario + perfil “tech” validado por el Builder/Director.
+     * @param id             ID del usuario
+     * @param username       Nombre de usuario
+     * @param email          Email
+     * @param rawPassword    Contraseña
+     * @param initialSkills  Lista de skills iniciales
+     * @return Usuario ya persistido con su perfil
+     */
+    public User createTechCandidate(int id,
+                                    String username,
+                                    String email,
+                                    String rawPassword,
+                                    List<String> initialSkills) {
+        // Opción: podrías validar aquí que el ID o el email no estén ya en uso...
+        ProfileBuilder builder = new ConcreteProfileBuilder();
+        // 1) Montar User+Profile
+        User candidate = director.createTechCandidate(
+                builder,
+                id,
+                username,
+                email,
+                initialSkills
+        );
+        // 2) Asignar contraseña
+        builder.withUserPassword(rawPassword);
 
-        try {
-            // Validar usuario existente
-            userRepo.findUserById(profile.getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("Usuario no existe"));
+        // 3) Persistir User (y obtenemos el ID real si fuera autogenerado)
+        User savedUser = userRepo.saveUser(candidate);
 
-            // Guardar perfil básico (sin skills primero)
-            Profile newProfile = new Profile(
-                    0, // ID será generado
-                    profile.getUserId(),
-                    profile.getProfession(),
-                    new ArrayList<>(),
-                    profile.getDescription()
-            );
+        // 4) Persistir Profile básico (sin skills aún)
+        Profile toSave = savedUser.getProfile();
+        toSave.setUserId(savedUser.getId());
+        Profile savedProfile = profileRepo.saveProfile(toSave);
 
-            Profile savedProfile = profileRepo.saveProfile(newProfile);
+        // 5) Asignar skills en la tabla intermedia
+        assignSkillsToProfile(savedProfile.getId(), initialSkills);
 
-            // Asignar skills
-            if (profile.getJobSkills() != null && !profile.getJobSkills().isEmpty()) {
-                assignSkillsToProfile(savedProfile.getId(), profile.getJobSkills());
-            }
-
-            return getProfileById(savedProfile.getId())
-                    .orElseThrow(() -> new RuntimeException("Perfil creado pero no se pudo recuperar"));
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear perfil: " + e.getMessage(), e);
-        }
+        // 6) Devolver el usuario con perfil completo
+        savedUser.setProfile(getProfileById(savedProfile.getId()).orElse(savedProfile));
+        return savedUser;
     }
 
     private void assignSkillsToProfile(int profileId, List<String> skills) {
-        try {
-            for (String skill : skills) {
-                int skillId = skillRepo.getOrCreateSkill(skill);
-                skillRepo.assignSkillToProfile(profileId, skillId);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error asignando habilidades al perfil", e);
-        }
+        skills.forEach(skillName -> {
+            int skillId = skillRepo.getOrCreateSkill(skillName);
+            skillRepo.assignSkillToProfile(profileId, skillId);
+        });
     }
 
+    /**
+     * Reconstruye y valida un Profile existente antes de actualizar.
+     */
+    public Profile updateProfile(Profile rawProfile,
+                                 String newDescription,
+                                 List<String> newSkills) {
+        // 1) Asegurarnos de que existe
+        Profile existing = profileRepo.findByProfileId(rawProfile.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Perfil no existe"));
+
+        // 2) Usar el Builder en modo “solo Profile”
+        ProfileBuilder builder = new ConcreteProfileBuilder();
+        Profile rebuilt = builder.reset()
+                .withProfession(rawProfile.getProfession())
+                .withDescription(newDescription)
+                .withSkills(newSkills)
+                .buildProfileOnly();
+
+        // 3) Persistir cambios básicos
+        Profile updated = profileRepo.updateProfile(rebuilt);
+
+        // 4) Reasignar skills (eliminar + volver a asignar)
+        skillRepo.deleteSkillsForProfile(updated.getId());
+        assignSkillsToProfile(updated.getId(), newSkills);
+
+        // 5) Cargar skills y devolver
+        return getProfileById(updated.getId()).orElse(updated);
+    }
+
+    /* ---------------------- Métodos de consulta “puros” ---------------------- */
+
     public Optional<Profile> getProfileById(int id) {
-        Optional<Profile> profileOpt = profileRepo.findByProfileId(id);
-        profileOpt.ifPresent(profile ->
-                profile.setJobSkills(skillRepo.findSkillsByProfile(id))
-        );
-        return profileOpt;
+        Optional<Profile> opt = profileRepo.findByProfileId(id);
+        opt.ifPresent(p -> p.setJobSkills(skillRepo.findSkillsByProfile(id)));
+        return opt;
     }
 
     public Optional<Profile> getProfileByUser(int userId) {
-        Optional<Profile> profileOpt = profileRepo.findByUserId(userId);
-        profileOpt.ifPresent(profile ->
-                profile.setJobSkills(skillRepo.findSkillsByProfile(profile.getId()))
-        );
-        return profileOpt;
+        Optional<Profile> opt = profileRepo.findByUserId(userId);
+        opt.ifPresent(p -> p.setJobSkills(skillRepo.findSkillsByProfile(p.getId())));
+        return opt;
     }
 
     public List<Profile> getAllProfiles() {
-        List<Profile> profiles = profileRepo.findAllProfiles();
-        profiles.forEach(profile ->
-                profile.setJobSkills(skillRepo.findSkillsByProfile(profile.getId()))
-        );
-        return profiles;
+        List<Profile> list = profileRepo.findAllProfiles();
+        list.forEach(p -> p.setJobSkills(skillRepo.findSkillsByProfile(p.getId())));
+        return list;
     }
 
     public List<Profile> searchProfilesByProfession(String profession) {
-        List<Profile> profiles = profileRepo.findProfileByProfession(profession);
-        profiles.forEach(profile ->
-                profile.setJobSkills(skillRepo.findSkillsByProfile(profile.getId()))
-        );
-        return profiles;
+        List<Profile> list = profileRepo.findProfileByProfession(profession);
+        list.forEach(p -> p.setJobSkills(skillRepo.findSkillsByProfile(p.getId())));
+        return list;
     }
 
     public List<Profile> searchProfilesBySkills(List<String> skills) {
-        // Obtener IDs de skills primero
+        // 1) Obtener IDs de skills
         List<Integer> skillIds = skills.stream()
                 .map(skillRepo::getSkillIdByName)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .toList();
 
-        if (skillIds.isEmpty()) {
-            return List.of();
-        }
+        if (skillIds.isEmpty()) return List.of();
 
-        // Obtener perfiles que tienen TODAS las skills solicitadas
+        // 2) Buscar perfiles que tienen todas esas skills
         List<Integer> profileIds = skillRepo.findProfileIdsWithAllSkills(skillIds);
 
+        // 3) Cargar cada Profile completo
         return profileIds.stream()
                 .map(this::getProfileById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .toList();
     }
 
     public void deleteProfile(int id) {
-        // Primero eliminar relaciones de skills
         skillRepo.deleteSkillsForProfile(id);
-        // Luego eliminar el perfil
         profileRepo.deleteProfiles(id);
-    }
-
-    public Profile updateProfile(Profile profile) {
-        // Verificar que el perfil exista
-        Profile existingProfile = getProfileById(profile.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Perfil no existe"));
-
-        try {
-            // Actualizar datos básicos
-            Profile updatedProfile = profileRepo.updateProfile(
-                    new Profile(
-                            profile.getId(),
-                            existingProfile.getUserId(), // Mantener el user_id original
-                            profile.getProfession(),
-                            new ArrayList<>(), // Skills se manejan aparte
-                            profile.getDescription()
-                    )
-            );
-
-            // Actualizar skills (en transacción implícita)
-            skillRepo.deleteSkillsForProfile(profile.getId());
-            if (profile.getJobSkills() != null && !profile.getJobSkills().isEmpty()) {
-                assignSkillsToProfile(profile.getId(), profile.getJobSkills());
-            }
-
-            return getProfileById(updatedProfile.getId())
-                    .orElse(updatedProfile);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar perfil: " + e.getMessage(), e);
-        }
     }
 }

@@ -13,4 +13,5 @@ public interface ProfileRepository {
     void deleteProfiles(int id);
     Profile updateProfile(Profile profile);
     List<Profile> findProfileByProfession(String profession);
+    List<Profile> findProfileBySkills(List<String> skills);
 }

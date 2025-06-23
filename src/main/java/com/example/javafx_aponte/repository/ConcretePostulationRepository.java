@@ -48,6 +48,30 @@ public class ConcretePostulationRepository implements PostulationRepository {
     }
 
     @Override
+    public Optional<Postulation> findPostulationById(int id) {
+        String sql = """
+        SELECT p.*, u.name AS user_name, j.title AS job_title
+          FROM postulations p
+          JOIN users u ON p.user_id = u.id
+          JOIN job_vacancies j ON p.vacancy_id = j.id
+         WHERE p.id = ?
+    """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapToPostulation(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar postulación por ID: " + id, e);
+        }
+        return Optional.empty();
+    }
+
+
+    @Override
     public List<Postulation> findPostulationByUser(User user) {
         String sql = "SELECT p.*, j.title as job_title FROM postulations p " +
                 "JOIN job_vacancies j ON p.vacancy_id = j.id " +
@@ -141,16 +165,16 @@ public class ConcretePostulationRepository implements PostulationRepository {
     }
 
     private Postulation mapToPostulation(ResultSet rs) throws SQLException {
-        User user = new User(rs.getInt("user_id"), rs.getString("user_name"), null, null, null);
+        User user = new User(
+                rs.getInt("user_id"),
+                rs.getString("user_name"),
+                null, null, null
+        );
 
         JobVacancy job = new JobVacancy(
                 rs.getInt("vacancy_id"),
                 rs.getString("job_title"),
-                null,
-                null,
-                null,
-                null,
-                0
+                null, null, null, List.of(), 0.0
         );
 
         return new Postulation(

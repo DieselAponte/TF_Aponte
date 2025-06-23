@@ -2,9 +2,11 @@ package com.example.javafx_aponte.models;
 
 import java.time.LocalDate;
 
+import com.example.javafx_aponte.observer.postulation.PostulationEvent;
+import com.example.javafx_aponte.observer.postulation.PostulationSubject;
 import com.example.javafx_aponte.util.PostulationStatus;
 
-public class Postulation {
+public class Postulation extends PostulationSubject {
     private int idPostulation;
     private User user;
     private JobVacancy jobVacancy;
@@ -21,7 +23,7 @@ public class Postulation {
     }
 
     public void isPending(){
-        status = PostulationStatus.POSTULADO;
+        setStatus(PostulationStatus.POSTULADO);
     }
 
     public void isBeingProcessed(){
@@ -29,15 +31,15 @@ public class Postulation {
     }
 
     public void isApprove(){
-        status = PostulationStatus.ACEPTADO;
+        setStatus(PostulationStatus.ACEPTADO);
     }
 
     public void isRejected(){
-        status = PostulationStatus.RECHAZADO;
+        setStatus(PostulationStatus.RECHAZADO);
     }
 
     public void goInterview(){
-        status = PostulationStatus.ENTREVISTA;
+        setStatus(PostulationStatus.ENTREVISTA);
     }
 
     public User getUser() {
@@ -60,8 +62,10 @@ public class Postulation {
         return status;
     }
 
-    public void setStatus(PostulationStatus status) {
-        this.status = status;
+    public void setStatus(PostulationStatus newStatus) {
+        PostulationStatus oldStatus = this.status;
+        this.status = newStatus;
+        notifyObservers(new PostulationEvent(this, oldStatus));
     }
 
     public LocalDate getPostulationDate() {
@@ -88,4 +92,10 @@ public class Postulation {
     public int getJobVacancyId() {
         return jobVacancy != null ? jobVacancy.getId() : 0;
     }
+
+    //Observer
+
+
+    // Modificar todos los métodos de estado para usar setStatus()
+
 }

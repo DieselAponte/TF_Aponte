@@ -1,10 +1,13 @@
 package com.example.javafx_aponte.models;
 
+import com.example.javafx_aponte.observer.job_alerts.JobAlertSubject;
+import com.example.javafx_aponte.observer.job_alerts.JobVacancyEvent;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobVacancy {
+public class JobVacancy extends JobAlertSubject {
     private int id;
     private String title;
     private String description;
@@ -21,6 +24,7 @@ public class JobVacancy {
         this.publicationDate = publicationDate;
         this.jobRequirements = jobRequirements;
         this.salary = salary;
+        publish();
     }
 
     public boolean matchesKeyWord(String keyWord){
@@ -93,5 +97,9 @@ public class JobVacancy {
 
     public void setSalary(double salary) {
         this.salary = salary;
+    }
+
+    public void publish(){
+        notifyObservers(new JobVacancyEvent(this));
     }
 }

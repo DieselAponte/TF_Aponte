@@ -176,39 +176,39 @@ public class ConcreteProfileRepository implements ProfileRepository {
         return profiles;
     }
 
-//    @Override
-//    public List<Profile> findProfileBySkills(List<String> skills) {
-//        List<Profile> profiles = new ArrayList<>();
-//        if (skills.isEmpty()) return profiles;
-//
-//        String placeholders = String.join(",", Collections.nCopies(skills.size(), "?"));
-//        String sql = "SELECT p.* FROM profiles p " +
-//                "JOIN profile_skills ps ON p.id = ps.profile_id " +
-//                "JOIN skills s ON ps.skill_id = s.skill_id " +
-//                "WHERE s.skill_name IN (" + placeholders + ") " +
-//                "GROUP BY p.id HAVING COUNT(DISTINCT s.skill_name) = ?";
-//
-//        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-//            // Establecer parámetros para los skills
-//            int i = 1;
-//            for (String skill : skills) {
-//                stmt.setString(i++, skill);
-//            }
-//            // Establecer el parámetro para el HAVING COUNT
-//            stmt.setInt(i, skills.size());
-//
-//            ResultSet rs = stmt.executeQuery();
-//            while (rs.next()) {
-//                Profile profile = mapToProfile(rs);
-//                profile.setJobSkills(getProfileSkills(profile.getId()));
-//                profiles.add(profile);
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Error al buscar perfiles por habilidades", e);
-//        }
-//
-//        return profiles;
-//    }
+    @Override
+    public List<Profile> findProfileBySkills(List<String> skills) {
+        List<Profile> profiles = new ArrayList<>();
+        if (skills.isEmpty()) return profiles;
+
+        String placeholders = String.join(",", Collections.nCopies(skills.size(), "?"));
+        String sql = "SELECT p.* FROM profiles p " +
+                "JOIN profile_skills ps ON p.id = ps.profile_id " +
+                "JOIN skills s ON ps.skill_id = s.skill_id " +
+                "WHERE s.skill_name IN (" + placeholders + ") " +
+                "GROUP BY p.id HAVING COUNT(DISTINCT s.skill_name) = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            // Establecer parámetros para los skills
+            int i = 1;
+            for (String skill : skills) {
+                stmt.setString(i++, skill);
+            }
+            // Establecer el parámetro para el HAVING COUNT
+            stmt.setInt(i, skills.size());
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Profile profile = mapToProfile(rs);
+                profile.setJobSkills(getProfileSkills(profile.getId()));
+                profiles.add(profile);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar perfiles por habilidades", e);
+        }
+
+        return profiles;
+    }
 
 
     // Métodos auxiliares
